@@ -70,12 +70,10 @@
                     @php
                     $role = '';
                     $dashboard = '';
-                        if (Auth::guard('web')->check()){
+                        if (Auth::User()->role=='user'){
                             $dashboard = route('web.dashboard');
-                            $role = 'user';
-                        } elseif (Auth::guard('admin')->check()) {
+                        } else {
                             $dashboard = route('admin.dashboard');
-                            $role = 'admin';
                         }
                     @endphp
                     <a class="nav-link menu-link" href="{{$dashboard}}"  role="button"
@@ -83,7 +81,7 @@
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
                 </li>
-                @if ($role == 'user')
+                @can('User')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('web.books.novel') }}"  role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
@@ -120,8 +118,7 @@
                         <i class="ri-book-line"></i> <span data-key="t-books">Dongeng</span>
                     </a>
                 </li>
-                @endif
-                @if ($role == 'admin')
+                @elsecan('Admin')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('admin.books.index') }}"  role="button"
                         aria-expanded="false" aria-controls="sidebarDashboards">
@@ -134,7 +131,7 @@
                         <i class="ri-shopping-bag-3-line"></i> <span data-key="t-books">Order</span>
                     </a>
                 </li>
-                @endif
+                @endcan
             </ul>
             @endauth
         </div>

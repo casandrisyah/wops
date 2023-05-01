@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -13,7 +13,7 @@ Route::group(['domain' => ''], function () {
         Route::prefix('auth')->name('auth.')->group(function () {
             Route::post('login', [AuthController::class, 'do_login'])->name('login');
         });
-        Route::middleware(['auth:admin'], 'admin')->group(function () {
+        Route::middleware('can:Admin')->group(function () {
             Route::redirect('/', 'dashboard', 301);
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::resource('books', BookController::class);

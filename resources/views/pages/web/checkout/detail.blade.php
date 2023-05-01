@@ -6,7 +6,7 @@
 
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                        <li class="breadcrumb-item"><a href="javascript:;">Ecommerce</a></li>
                         <li class="breadcrumb-item active">Checkout</li>
                     </ol>
                 </div>
@@ -42,7 +42,7 @@
                                     with
                                     details of your order.</p>
 
-                                   <h3 class="fw-semibold">Order ID: <a href="{{ route('web.order.show', $order->id) }}" class="text-decoration-underline">{{ $order->code }}</a></h3>
+                                   <h3 class="fw-semibold">Order ID: <a href="javascript:;" class="text-decoration-underline">{{ $order->code }}</a></h3>
                             </div>
                         </div>
                         <!-- end tab content -->
@@ -74,18 +74,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                $orderDetail = App\Models\OrderDetail::where('order_id', $order->id)->first();
+                                @php 
+                                    $orderDetail = \App\Models\OrderDetail::where('order_id', $order->id)->get();
                                 @endphp
-                                @foreach ($order->orderDetail as $item)
+                                @foreach ($orderDetail as $item)
                                 <tr>
                                     <td>
                                         <div class="avatar-md bg-light rounded p-1">
-                                            <img src="{{ asset('storage/'.$item->book->cover) }}" alt="" class="img-fluid d-block">
+                                            <img src="{{ asset('images/books/'.$item->book->cover) }}" alt="" class="img-fluid d-block">
                                         </div>
                                     </td>
                                     <td>
-                                        <h5 class="fs-14"><a href="{{ route('distributor.product.show', $item->book->id) }}" class="text-dark">{{ $item->book->title }}</a>
+                                        <h5 class="fs-14"><a href="{{ route('web.books.show', $item->book->id) }}" class="text-dark">{{ $item->book->title }}</a>
                                         </h5>
                                         <p class="text-muted mb-0">Rp. {{ number_format($item->book->price) . ' x ' . $item->quantity }} </p>
                                     </td>
@@ -110,5 +110,4 @@
         </div>
         <!-- end col -->
     </div>
-    <!-- end row -->
 </x-app-layout>

@@ -11,6 +11,7 @@ use App\Models\Province;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,10 +21,12 @@ class CheckoutController extends Controller
     {
         $carts = Cart::where('user_id', Auth::guard('web')->user()->id)->get();
         $provinces = Province::all();
-        return view('pages.web.checkout.main', compact('carts', 'provinces'));
+        $cities = City::all();
+        $subdistricts = City::all();
+        return view('pages.web.checkout.main', compact('carts', 'provinces', 'cities', 'subdistricts'));
     }
-    public function checkout(Request $request)
-    {
+
+    public function check(Request $request){
         $validators = Validator::make($request->all(), [
             'fullname' => 'required',
             'phone' => 'required',
@@ -94,6 +97,14 @@ class CheckoutController extends Controller
             }
         }
 
+        return response()->json([
+            'alert' => 'success',
+        ]);
+    }
+
+    public function checkout(Request $request)
+    {
+        
         $user = User::find(Auth::guard('web')->user()->id);
         $user->fullname = $request->fullname;
         $user->phone = $request->phone;

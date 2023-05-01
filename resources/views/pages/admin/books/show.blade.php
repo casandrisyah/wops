@@ -141,9 +141,9 @@
                     <p>{{ $data->description }}</p>
                 </div>
             </div>
-        </div>
-        <div class="hstack gap-2 justify-content-end">
-            <a class="btn btn-light" href="javascript:;" onclick="load_list(1);">Kembali</a>
+            <div class="hstack gap-2 justify-content-end">
+                <a class="btn btn-light" href="javascript:;" onclick="load_list(1);">Kembali</a>
+            </div>
         </div>
     </div>
 </div>

@@ -21,7 +21,11 @@ class CartController extends Controller
             'book_id' => $request->book_id,
             'quantity' => $request->quantity,
         ]);
-        return "Item berhasil ditambahkan ke keranjang";
+        return response()->json([
+            'alert' => 'success',
+            'message' => 'Berhasil menambahkan ke keranjang',
+            'data' => $cart,
+        ]);
     }
 
     public function update(Request $request, Cart $cart)
@@ -29,12 +33,18 @@ class CartController extends Controller
         $cart->update([
             'quantity' => $request->quantity,
         ]);
-        return "Item berhasil diupdate";
+        
+        return response()->json([
+            'alert' => 'success',
+            'message' => 'Berhasil mengubah jumlah',
+            'data' => $cart,
+        ]);
     }
 
     public function destroy(Cart $cart)
     {
         $cart->delete();
+        
         return "Item Berhasil Dihapus";
     }
 }

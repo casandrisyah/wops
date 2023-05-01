@@ -1,5 +1,4 @@
 <x-app-layout title="">
-    
     <div class="page-content">
         <div class="container-fluid">
 
@@ -27,14 +26,9 @@
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                                    <img src="{{ asset('storage/'.Auth::user()->image) }}"
-                                        class="rounded-circle avatar-xl img-thumbnail user-profile-image"
-                                        alt="user-profile-image">
                                     <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
-                                        <input id="profile-img-file-input" type="file"
-                                            class="profile-img-file-input">
-                                        <label for="profile-img-file-input"
-                                            class="profile-photo-edit avatar-xs">
+                                        <input id="profile-img-file-input" type="file" class="profile-img-file-input">
+                                        <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
                                             <span class="avatar-title rounded-circle bg-light text-body">
                                                 <i class="ri-camera-fill"></i>
                                             </span>
@@ -42,7 +36,7 @@
                                     </div>
                                 </div>
                                 <h5 class="fs-16 mb-1">{{ Auth::user()->name }}</h5>
-                                <p class="text-muted mb-0">Lead Designer / Developer</p>
+                                <p class="text-muted mb-0">Customer</p>
                             </div>
                         </div>
                     </div>
@@ -109,18 +103,56 @@
                                                         placeholder="Enter zipcode" value="{{ Auth::User()->address }}">
                                                 </div>
                                             </div>
-                                            @php
-                                            $profile = '';
-                                            $role = Auth::user()->role;
-                                            if ($role == 'p') {
-                                                $profile = route('petani.profile.edit');
-                                            } elseif ($role == 'd') {
-                                                $profile = route('distributor.profile.edit');
-                                            }
-                                            @endphp
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="province" class="form-label">Province</label>
+                                                    <select class="form-control" id="province" name="province" data-plugin="choices">
+                                                        <option value="">Select Province</option>
+                                                        @foreach($provinces as $province)
+                                                            <option value="{{ $province->id }}"
+                                                                {{ Auth::user()->province_id==$province->id?'selected':'' }}>
+                                                                {{ $province->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="city" class="form-label">City</label>
+                                                    <select class="form-control" id="city" name="city" data-plugin="choices">
+                                                        <option value="">Select City</option>
+                                                        @foreach($cities as $city)
+                                                            <option value="{{ $city->id }}"
+                                                                {{ Auth::user()->city_id==$city->id?'selected':'' }}>
+                                                                {{ $city->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="subdistrict" class="form-label">Subdistrict</label>
+                                                    <select class="form-control" id="district" name="subdistrict" data-plugin="choices">
+                                                        <option value="">Select Subdistrict</option>
+                                                        @foreach($subdistricts as $subdistrict)
+                                                            <option value="{{ $subdistrict->id }}"
+                                                                {{ Auth::user()->subdistrict_id==$subdistrict->id?'selected':'' }}>
+                                                                {{ $subdistrict->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="postal_code" class="form-label">Postal Code</label>
+                                                    <input type="text" class="form-control" minlength="5"
+                                                        maxlength="50" id="postal_code"
+                                                        placeholder="Enter zipcode" value="{{ Auth::User()->postal_code }}">
+                                                </div>
+                                            </div>
                                             <div class="col-lg-12">
                                                 <div class="hstack gap-2 justify-content-end">
-                                                    <a href="{{ $profile }}" class="btn btn-primary">Edit</a>
+                                                    <a href="{{ route('web.profile.edit') }}" class="btn btn-primary">Edit</a>
                                                     <button type="button"
                                                         class="btn btn-soft-info">Cancel</button>
                                                 </div>
@@ -131,16 +163,7 @@
                                 </div>
                                 <!--end tab-pane-->
                                 <div class="tab-pane" id="changePassword" role="tabpanel">
-                                    @php
-                                    $profile = '';
-                                    $role = Auth::user()->role;
-                                    if ($role == 'p') {
-                                        $profile = route('petani.profile.cpassword');
-                                    } elseif ($role == 'd') {
-                                        $profile = route('distributor.profile.cpassword');
-                                    }
-                                    @endphp
-                                    <form action="{{ $profile }}" method="POST">
+                                    <form action="{{ route('web.profile.do_change_password') }}" method="POST">
                                         @csrf
                                         @method('PATCH')
                                         <div class="row g-2">

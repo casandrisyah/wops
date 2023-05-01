@@ -17,6 +17,17 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
+        $validators = Validator::make($request->all(), [
+            'title' => 'required',
+            'author' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+            'year' => 'required',
+            'publisher' => 'required',
+            'cover' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
         $file = $request->file('cover');
         $fileName = $file->getClientOriginalName();
         $file->move('images/books', $fileName);
@@ -33,7 +44,11 @@ class BookController extends Controller
             'cover' => $fileName,
         ]);
 
-        return "Data berhasil ditambahkan";
+        return response()->json([
+            'alert' => 'success',
+            'message' => 'Berhasil menambahkan buku',
+            'data' => $book,
+        ]);
     }
 
     public function show(Book $book)
@@ -43,6 +58,16 @@ class BookController extends Controller
 
     public function update(Request $request, Book $book)
     {
+        $validators = Validator::make($request->all(), [
+            'title' => 'required',
+            'author' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+            'stock' => 'required',
+            'year' => 'required',
+            'publisher' => 'required',
+            'cover' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
         $file = $request->file('cover');
         $fileName = $file->getClientOriginalName();
@@ -60,16 +85,15 @@ class BookController extends Controller
             'cover' => $fileName,
         ]);
 
-        return "Data berhasil diubah";
+        return response()->json([
+            'alert' => 'success',
+            'message' => 'Berhasil mengubah buku',
+            'data' => $book,
+        ]);
     }
 
     public function destroy(Book $book)
     {
-        $file = $book->cover;
-        $path = public_path('images/books/' . $file);
-        if (file_exists($path)) {
-            unlink($path);
-        }
         $book->delete();
 
         return "Berhasil menghapus buku";

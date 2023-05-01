@@ -23,10 +23,10 @@
             @guest
             <div class="d-flex align-items-center">
                 <div class="navbar-brand-box ml-auto">
-                    <a href="{{ route('web.auth.index') }}" class="btn btn-sm btn-primary">Masuk</a>
+                    <a href="{{ route('auth.index') }}" class="btn btn-sm btn-primary">Masuk</a>
                 </div>
             @else
-                @if (Auth::guard('web')->check())
+                @can('User')
                 <div class="d-flex align-items-center">
                     <div class="dropdown topbar-head-dropdown ms-1 header-item" id="top-cart">
                         <button type="button" onclick="tombol_cart();"
@@ -78,12 +78,12 @@
                             <span class="d-flex align-items-center">
                                 <span class="text-start ms-xl-2">
                                     <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                    <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::guard('web')->User()->name }}</span>
+                                    <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::User()->name }}</span>
                                 </span>
                             </span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <h6 class="dropdown-header">Welcome {{ Auth::guard('web')->User()->name }}!</h6>
+                            <h6 class="dropdown-header">Welcome {{ Auth::User()->name }}!</h6>
                             <a class="dropdown-item" href="{{ route('web.profile') }}"><i
                                     class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
                                     class="align-middle">Profile</span></a>
@@ -97,19 +97,19 @@
                         </div>
                     </div>
                 </div>
-                @else
+                @elsecan('Admin')
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
                             <span class="text-start ms-xl-2">
                                 <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::guard('admin')->User()->fullname }}</span>
+                                <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ Auth::User()->name }}</span>
                             </span>
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <h6 class="dropdown-header">Welcome {{ Auth::guard('admin')->User()->fullname }}!</h6>
+                        <h6 class="dropdown-header">Welcome {{ Auth::User()->name }}!</h6>
                         <a class="dropdown-item" href="{{ route('admin.profile'); }}">
                             <i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span class="align-middle">Profile</span>
@@ -120,8 +120,8 @@
                         </a>
                     </div>
                 </div>
-                @endif
-                @endguest
+                @endcan
+            @endguest
             </div>
         </div>
 </header>

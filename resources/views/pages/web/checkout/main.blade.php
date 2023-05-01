@@ -16,7 +16,8 @@
         </div>
     </div>
     <!-- end page title -->
-    <form id="form_checkout">
+    <form id="form_checkout" action="{{ route('web.checkout') }}" method="POST" enctype="multipart/form-data">
+        @csrf
         <div class="row">
             <div class="col-xl-8">
                 <div class="card">
@@ -63,7 +64,7 @@
                                                 <label for="fullname" class="form-label">Nama Lengkap</label>
                                                 <input type="text" class="form-control" id="fullname" name="fullname"
                                                     placeholder="Enter first name"
-                                                    value="{{ Auth::guard('web')->user()->fullname }}">
+                                                    value="{{ Auth::user()->fullname }}">
                                             </div>
                                         </div>
                                     </div>
@@ -74,7 +75,7 @@
                                                 <label for="email" class="form-label">Email</label>
                                                 <input type="email" class="form-control" id="email" name="email"
                                                     placeholder="Enter email"
-                                                    value="{{ Auth::guard('web')->user()->email }}">
+                                                    value="{{ Auth::user()->email }}">
                                             </div>
                                         </div>
 
@@ -83,7 +84,7 @@
                                                 <label for="phone" class="form-label">Nomor Telepon</label>
                                                 <input type="text" class="form-control" id="phone" name="phone"
                                                     placeholder="Enter phone"
-                                                    value="{{ Auth::guard('web')->user()->phone }}">
+                                                    value="{{ Auth::user()->phone }}">
                                             </div>
                                         </div>
                                     </div>
@@ -91,7 +92,7 @@
                                     <div class="mb-3">
                                         <label for="" class="form-label">Address</label>
                                         <textarea class="form-control" id="" name="address" placeholder="Enter address"
-                                            rows="3"></textarea>
+                                            rows="3">{{ Auth::user()->address }}</textarea>
                                     </div>
 
                                     <div class="row">
@@ -102,7 +103,7 @@
                                                     data-plugin="choices">
                                                     <option value="">Select Province</option>
                                                     @foreach($provinces as $province)
-                                                    <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                                    <option value="{{ $province->id }}" {{ Auth::user()->province_id==$province->id?'selected':''}}>{{ $province->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -112,7 +113,14 @@
                                             <div class="mb-3">
                                                 <label for="city" class="form-label">Kota</label>
                                                 <select class="form-control" id="city" name="city">
+                                                    @if(Auth::user()->city_id == null)
                                                     <option value="">Select Kota</option>
+                                                    @else
+                                                    @foreach($cities as $city)
+                                                    <option value="{{ $city->id }}" {{ Auth::user()->city_id==$city->id?'selected':''}}>{{ $city->name }}
+                                                    </option>
+                                                    @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
@@ -121,7 +129,14 @@
                                             <div class="mb-3">
                                                 <label for="district" class="form-label">Kecamatan</label>
                                                 <select class="form-control" id="subdistrict" name="subdistrict">
+                                                    @if(Auth::user()->subdistrict_id == null)
                                                     <option value="">Select Kecamatan</option>
+                                                    @else
+                                                    @foreach($subdistricts as $subdistrict)
+                                                    <option value="{{ $subdistrict->id }}" {{ Auth::user()->subdistrict_id==$subdistrict->id?'selected':''}}>{{ $subdistrict->name }}
+                                                    </option>
+                                                    @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
@@ -130,7 +145,7 @@
                                         <label for="postal_code" class="form-label">Kode Pos</label>
                                         <input type="text" class="form-control" id="postal_code" name="postal_code"
                                             placeholder="Enter postal code"
-                                            value="{{ Auth::guard('web')->user()->postal_code }}">
+                                            value="{{ Auth::user()->postal_code }}">
                                     </div>
 
                                     <div class="d-flex align-items-start gap-3 mt-3">
@@ -335,7 +350,7 @@
         function checkout(form, method) {
             let formData = new FormData($(form)[0]);
             $.ajax({
-                url: "{{ route('web.checkout') }}",
+                url: "{{ route('web.check') }}",
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -356,10 +371,13 @@
                             $(tombol).prop("disabled", false);
                             $(tombol).removeAttr("data-kt-indicator");
                         }, 2000);
+                    } else {
+                        $('#form_checkout').submit();
                     }
                 }
             });
         }
+        
         $("#province").change(function () {
             $.post('{{route('web.regional.city')}}', {
                     province: $("#province").val()
@@ -376,20 +394,6 @@
                     $("#subdistrict").html(result);
                 }, "html");
         });
-        @if(Auth::guard('web')->user()->province_id)
-        $("#province").select2().select2("val", '{{Auth::guard("web")->user()->province_id}}');
-        setTimeout(function () {
-            $('#province').trigger('change');
-            setTimeout(function () {
-                $('#city').val('{{Auth::guard("web")->user()->city_id}}');
-                $('#city').trigger('change');
-                setTimeout(function () {
-                    $('#subdistrict').val('{{Auth::guard("web")->user()->subdistrict_id}}');
-                    $('#subdistrict').trigger('change');
-                }, 500);
-            }, 500);
-        }, 100);
-        @endif
     </script>
     @endsection
 </x-app-layout>

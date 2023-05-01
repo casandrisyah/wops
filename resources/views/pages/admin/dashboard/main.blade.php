@@ -11,7 +11,7 @@
             <div class="card">
                 <center>
                     <div class="card-header border-0">
-                        <h5>Selamat datang di Halaman Admin, {{ Auth::guard('admin')->user()->name }}</h5>
+                        <h5>Selamat datang di Halaman Admin, {{ Auth::user()->name }}</h5>
                     </div>
                     <div class="card-body">
                         <h3>HAI ADMIN</h3>

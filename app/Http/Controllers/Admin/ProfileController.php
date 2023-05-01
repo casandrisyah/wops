@@ -17,6 +17,7 @@ class ProfileController extends Controller
 
     public function cpassword(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'password' => 'required|min:8|confirmed',
